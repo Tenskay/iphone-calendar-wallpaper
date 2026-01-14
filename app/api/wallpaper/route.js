@@ -6,9 +6,8 @@ export async function GET() {
   const WIDTH = 1179;
   const HEIGHT = 2556;
 
-  // ===== Safe zones под Lock Screen iPhone 15 =====
-  const SAFE_TOP = 320;     // часы + виджеты
-  const SAFE_BOTTOM = 160;  // свайпы / home indicator
+  const SAFE_TOP = 320;
+  const SAFE_BOTTOM = 160;
 
   const today = new Date();
   const year = today.getFullYear();
@@ -23,7 +22,6 @@ export async function GET() {
 
   const weekdays = ["ПН","ВТ","СР","ЧТ","ПТ","СБ","ВС"];
 
-  // Праздники РФ (официальные выходные)
   const holidays = {
     0: [1,2,3,4,5,6,7,8],
     1: [23],
@@ -41,7 +39,7 @@ export async function GET() {
         style={{
           width: "100%",
           height: "100%",
-          background: "linear-gradient(180deg, #0e0b1f 0%, #1a1338 50%, #24194a 100%)",
+          background: "linear-gradient(180deg, #0e0b1f, #1a1338, #24194a)",
           display: "flex",
           flexDirection: "column",
           paddingTop: SAFE_TOP,
@@ -52,7 +50,7 @@ export async function GET() {
           color: "#e6ddff",
         }}
       >
-        {/* ===== ГОД ===== */}
+        {/* Год */}
         <div
           style={{
             textAlign: "center",
@@ -65,7 +63,7 @@ export async function GET() {
           {year}
         </div>
 
-        {/* ===== 12 МЕСЯЦЕВ ===== */}
+        {/* 12 месяцев */}
         <div
           style={{
             display: "grid",
@@ -84,21 +82,20 @@ export async function GET() {
               <div
                 key={m}
                 style={{
-                  background: "rgba(255,255,255,0.08)",
+                  background: "rgba(255,255,255,0.10)",
                   borderRadius: 28,
                   padding: 20,
-                  backdropFilter: "blur(24px)",
                   border: "1px solid rgba(255,255,255,0.18)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
                   display: "flex",
                   flexDirection: "column",
                 }}
               >
-                {/* Месяц */}
+                {/* Название месяца */}
                 <div
                   style={{
                     textAlign: "center",
                     fontSize: 28,
-                    letterSpacing: 1.5,
                     marginBottom: 10,
                     opacity: 0.9,
                   }}
@@ -113,8 +110,8 @@ export async function GET() {
                     gridTemplateColumns: "repeat(7, 1fr)",
                     fontSize: 18,
                     marginBottom: 6,
-                    opacity: 0.65,
                     textAlign: "center",
+                    opacity: 0.7,
                   }}
                 >
                   {weekdays.map((w, i) => (
@@ -124,7 +121,7 @@ export async function GET() {
                   ))}
                 </div>
 
-                {/* Сетка дней */}
+                {/* Дни */}
                 <div
                   style={{
                     display: "grid",
@@ -177,14 +174,12 @@ export async function GET() {
                               height: 32,
                               borderRadius: "50%",
                               background: "rgba(167,139,250,0.95)",
-                              zIndex: 0,
                             }}
                           />
                         )}
                         <span
                           style={{
                             position: "relative",
-                            zIndex: 1,
                             color: isToday ? "#ffffff" : color,
                           }}
                         >
