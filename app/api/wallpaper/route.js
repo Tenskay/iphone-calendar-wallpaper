@@ -3,11 +3,13 @@ import { ImageResponse } from "@vercel/og";
 export const runtime = "edge";
 
 export async function GET() {
+  // iPhone 15
   const WIDTH = 1179;
   const HEIGHT = 2556;
 
+  // Safe zones под часы и нижнюю панель
   const SAFE_TOP = 320;
-  const SAFE_BOTTOM = 160;
+  const SAFE_BOTTOM = 180;
 
   const today = new Date();
   const year = today.getFullYear();
@@ -22,6 +24,7 @@ export async function GET() {
 
   const weekdays = ["ПН","ВТ","СР","ЧТ","ПТ","СБ","ВС"];
 
+  // Праздники РФ
   const holidays = {
     0: [1,2,3,4,5,6,7,8],
     1: [23],
@@ -37,7 +40,7 @@ export async function GET() {
         style={{
           width: "100%",
           height: "100%",
-          background: "linear-gradient(180deg,#0e0b1f,#1a1338,#24194a)",
+          background: "linear-gradient(180deg,#f2ecff,#e7ddff,#dcd1ff)",
           display: "flex",
           flexDirection: "column",
           paddingTop: SAFE_TOP,
@@ -45,29 +48,33 @@ export async function GET() {
           paddingLeft: 40,
           paddingRight: 40,
           fontFamily: "system-ui",
-          color: "#e6ddff",
+          color: "#3a2f5c",
         }}
       >
         {/* Год */}
-        <div style={{
-          textAlign: "center",
-          fontSize: 64,
-          marginBottom: 32,
-          letterSpacing: 4,
-          opacity: 0.85
-        }}>
+        <div
+          style={{
+            textAlign: "center",
+            fontSize: 64,
+            marginBottom: 28,
+            letterSpacing: 3,
+            opacity: 0.85,
+          }}
+        >
           {year}
         </div>
 
-        {/* Месяцы */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gridTemplateRows: "repeat(4, 1fr)",
-          gap: 24,
-          flex: 1
-        }}>
-          {months.map((name, m) => {
+        {/* Сетка месяцев */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateRows: "repeat(4, 1fr)",
+            gap: 24,
+            flex: 1,
+          }}
+        >
+          {months.map((monthName, m) => {
             const firstDayRaw = new Date(year, m, 1).getDay();
             const firstDay = firstDayRaw === 0 ? 7 : firstDayRaw;
             const daysInMonth = new Date(year, m + 1, 0).getDate();
@@ -76,46 +83,62 @@ export async function GET() {
               <div
                 key={m}
                 style={{
-                  background: "rgba(255,255,255,0.10)",
-                  borderRadius: 24,
-                  border: "1px solid rgba(255,255,255,0.18)",
+                  background: "rgba(255,255,255,0.55)",
+                  border: "1px solid rgba(120,90,200,0.25)",
+                  borderRadius: 22,
                   padding: 16,
                   display: "flex",
                   flexDirection: "column",
                 }}
               >
-                <div style={{
-                  textAlign: "center",
-                  fontSize: 26,
-                  marginBottom: 8
-                }}>
-                  {name}
+                {/* Название месяца */}
+                <div
+                  style={{
+                    textAlign: "center",
+                    fontSize: 24,
+                    marginBottom: 6,
+                    letterSpacing: 1,
+                  }}
+                >
+                  {monthName}
                 </div>
 
-                <div style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(7, 1fr)",
-                  fontSize: 16,
-                  opacity: 0.65,
-                  marginBottom: 4,
-                  textAlign: "center"
-                }}>
-                  {weekdays.map((w, i) => (
-                    <div key={i} style={{ color: i === 6 ? "#ffb3d9" : "#cfc7ff" }}>
-                      {w}
+                {/* Дни недели */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(7, 1fr)",
+                    fontSize: 14,
+                    textAlign: "center",
+                    marginBottom: 6,
+                    opacity: 0.7,
+                  }}
+                >
+                  {weekdays.map((d, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        color: i === 6 ? "#c23b7a" : "#5a4b87",
+                      }}
+                    >
+                      {d}
                     </div>
                   ))}
                 </div>
 
-                <div style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(7, 1fr)",
-                  rowGap: 4,
-                  textAlign: "center",
-                  fontSize: 20
-                }}>
+                {/* Даты */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(7, 1fr)",
+                    rowGap: 6,
+                    textAlign: "center",
+                    fontSize: 18,
+                  }}
+                >
+                  {/* Пустые ячейки */}
                   {Array.from({ length: firstDay - 1 }).map((_, i) => (
-                    <div key={`e-${i}`} />
+                    <div key={`empty-${i}`} />
                   ))}
 
                   {Array.from({ length: daysInMonth }).map((_, i) => {
@@ -126,38 +149,56 @@ export async function GET() {
 
                     const isSunday = wd === 7;
                     const isHoliday = holidays[m]?.includes(d);
-                    const isToday = d === currentDay && m === currentMonth;
+                    const isToday =
+                      d === currentDay && m === currentMonth;
+
                     const isPast =
                       m < currentMonth ||
                       (m === currentMonth && d < currentDay);
 
-                    let color = "#cfc7ff";
-                    if (isSunday || isHoliday) color = "#ffb3d9";
-                    if (isPast) color = "rgba(207,199,255,0.35)";
-                    if (isPast && (isSunday || isHoliday))
-                      color = "rgba(255,179,217,0.45)";
+                    // Цвета
+                    let color = "#4a3f6b";
+
+                    if (isSunday || isHoliday) {
+                      color = "#c23b7a";
+                    }
+
+                    if (isPast) {
+                      color =
+                        isSunday || isHoliday
+                          ? "rgba(194,59,122,0.45)"
+                          : "rgba(74,63,107,0.35)";
+                    }
 
                     return (
-                      <div key={d}
+                      <div
+                        key={d}
                         style={{
                           position: "relative",
-                          height: 28,
+                          height: 26,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          color
                         }}
                       >
                         {isToday && (
-                          <div style={{
-                            position: "absolute",
-                            width: 30,
-                            height: 30,
-                            borderRadius: "50%",
-                            background: "rgba(167,139,250,0.95)"
-                          }} />
+                          <div
+                            style={{
+                              position: "absolute",
+                              width: 28,
+                              height: 28,
+                              borderRadius: "50%",
+                              background: "#7b5cff",
+                            }}
+                          />
                         )}
-                        <span style={{ position: "relative", color: isToday ? "#fff" : color }}>
+
+                        <span
+                          style={{
+                            position: "relative",
+                            color: isToday ? "#ffffff" : color,
+                          }}
+                        >
                           {d}
                         </span>
                       </div>
@@ -173,7 +214,9 @@ export async function GET() {
     {
       width: WIDTH,
       height: HEIGHT,
-      headers: { "Cache-Control": "no-store" }
+      headers: {
+        "Cache-Control": "no-store",
+      },
     }
   );
 }
