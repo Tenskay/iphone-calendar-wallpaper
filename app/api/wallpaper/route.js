@@ -31,49 +31,43 @@ export async function GET() {
     10: [4]
   };
 
-  const gridHeight = HEIGHT - SAFE_TOP - SAFE_BOTTOM;
-
   return new ImageResponse(
     (
       <div
         style={{
           width: "100%",
           height: "100%",
-          background: "linear-gradient(180deg, #0e0b1f, #1a1338, #24194a)",
+          background: "linear-gradient(180deg,#0e0b1f,#1a1338,#24194a)",
           display: "flex",
           flexDirection: "column",
           paddingTop: SAFE_TOP,
           paddingBottom: SAFE_BOTTOM,
-          paddingLeft: 48,
-          paddingRight: 48,
+          paddingLeft: 40,
+          paddingRight: 40,
           fontFamily: "system-ui",
           color: "#e6ddff",
         }}
       >
         {/* Год */}
-        <div
-          style={{
-            textAlign: "center",
-            fontSize: 64,
-            letterSpacing: 4,
-            marginBottom: 32,
-            opacity: 0.85,
-          }}
-        >
+        <div style={{
+          textAlign: "center",
+          fontSize: 64,
+          marginBottom: 32,
+          letterSpacing: 4,
+          opacity: 0.85
+        }}>
           {year}
         </div>
 
-        {/* 12 месяцев */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gridTemplateRows: "repeat(4, 1fr)",
-            gap: 28,
-            height: gridHeight,
-          }}
-        >
-          {months.map((monthName, m) => {
+        {/* Месяцы */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateRows: "repeat(4, 1fr)",
+          gap: 24,
+          flex: 1
+        }}>
+          {months.map((name, m) => {
             const firstDayRaw = new Date(year, m, 1).getDay();
             const firstDay = firstDayRaw === 0 ? 7 : firstDayRaw;
             const daysInMonth = new Date(year, m + 1, 0).getDate();
@@ -83,37 +77,29 @@ export async function GET() {
                 key={m}
                 style={{
                   background: "rgba(255,255,255,0.10)",
-                  borderRadius: 28,
-                  padding: 20,
+                  borderRadius: 24,
                   border: "1px solid rgba(255,255,255,0.18)",
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                  padding: 16,
                   display: "flex",
                   flexDirection: "column",
                 }}
               >
-                {/* Название месяца */}
-                <div
-                  style={{
-                    textAlign: "center",
-                    fontSize: 28,
-                    marginBottom: 10,
-                    opacity: 0.9,
-                  }}
-                >
-                  {monthName}
+                <div style={{
+                  textAlign: "center",
+                  fontSize: 26,
+                  marginBottom: 8
+                }}>
+                  {name}
                 </div>
 
-                {/* Дни недели */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(7, 1fr)",
-                    fontSize: 18,
-                    marginBottom: 6,
-                    textAlign: "center",
-                    opacity: 0.7,
-                  }}
-                >
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(7, 1fr)",
+                  fontSize: 16,
+                  opacity: 0.65,
+                  marginBottom: 4,
+                  textAlign: "center"
+                }}>
                   {weekdays.map((w, i) => (
                     <div key={i} style={{ color: i === 6 ? "#ffb3d9" : "#cfc7ff" }}>
                       {w}
@@ -121,16 +107,13 @@ export async function GET() {
                   ))}
                 </div>
 
-                {/* Дни */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(7, 1fr)",
-                    rowGap: 6,
-                    textAlign: "center",
-                    fontSize: 22,
-                  }}
-                >
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(7, 1fr)",
+                  rowGap: 4,
+                  textAlign: "center",
+                  fontSize: 20
+                }}>
                   {Array.from({ length: firstDay - 1 }).map((_, i) => (
                     <div key={`e-${i}`} />
                   ))}
@@ -155,34 +138,26 @@ export async function GET() {
                       color = "rgba(255,179,217,0.45)";
 
                     return (
-                      <div
-                        key={d}
+                      <div key={d}
                         style={{
                           position: "relative",
-                          height: 30,
+                          height: 28,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          color,
+                          color
                         }}
                       >
                         {isToday && (
-                          <div
-                            style={{
-                              position: "absolute",
-                              width: 32,
-                              height: 32,
-                              borderRadius: "50%",
-                              background: "rgba(167,139,250,0.95)",
-                            }}
-                          />
+                          <div style={{
+                            position: "absolute",
+                            width: 30,
+                            height: 30,
+                            borderRadius: "50%",
+                            background: "rgba(167,139,250,0.95)"
+                          }} />
                         )}
-                        <span
-                          style={{
-                            position: "relative",
-                            color: isToday ? "#ffffff" : color,
-                          }}
-                        >
+                        <span style={{ position: "relative", color: isToday ? "#fff" : color }}>
                           {d}
                         </span>
                       </div>
@@ -198,9 +173,7 @@ export async function GET() {
     {
       width: WIDTH,
       height: HEIGHT,
-      headers: {
-        "Cache-Control": "no-store",
-      },
+      headers: { "Cache-Control": "no-store" }
     }
   );
 }
